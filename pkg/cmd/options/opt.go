@@ -3,8 +3,8 @@ package options
 import (
 	"errors"
 	"github.com/spf13/pflag"
-	"github.com/wujunwei/crd2openapi/pkg/openapi"
-	"github.com/wujunwei/crd2openapi/pkg/util"
+	"github.com/lprashanthgowda/kube-crd2openapi/pkg/openapi"
+	"github.com/lprashanthgowda/kube-crd2openapi/pkg/util"
 	"os"
 	"path/filepath"
 )
