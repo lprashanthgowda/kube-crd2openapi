@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/wujunwei/crd2openapi/pkg/openapi/build"
+	"github.com/lprashanthgowda/kube-crd2openapi/pkg/openapi/build"
 	"io"
 	extensionv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	swagggerbuilder "k8s.io/apiextensions-apiserver/pkg/controller/openapi/builder"
