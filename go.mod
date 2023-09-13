@@ -1,4 +1,4 @@
-module github.com/wujunwei/crd2openapi
+module github.com/lprashanthgowda/kube-crd2openapi
 
 go 1.18
 
