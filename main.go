@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/wujunwei/crd2openapi/pkg/cmd"
+	"github.com/lprashanthgowda/kube-crd2openapi/pkg/cmd"
 	"os"
 )
 
