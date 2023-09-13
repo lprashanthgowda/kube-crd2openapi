@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/wujunwei/crd2openapi/pkg/cmd/options"
+	"github.com/lprashanthgowda/kube-crd2openapi/pkg/cmd/options"
 )
 
 func NewRootCommand() *cobra.Command {
