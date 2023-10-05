@@ -11,6 +11,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/yaml"
 	"k8s.io/kube-openapi/pkg/builder"
+	"k8s.io/kube-openapi/pkg/spec3"
 	"k8s.io/kube-openapi/pkg/validation/spec"
 	"os"
 	"strings"
@@ -54,7 +55,7 @@ func (c Config) New() (Converter, error) {
 	}, nil
 }
 
-//Converter crd to openapi json file
+// Converter crd to openapi json file
 type Converter struct {
 	Out         *os.File
 	Err         io.Writer
@@ -92,7 +93,7 @@ func (c *Converter) analyzeCRD() []*extensionv1.CustomResourceDefinition {
 	return crds
 }
 
-//Complete fill some fields
+// Complete fill some fields
 func (c *Converter) Complete(swagger *spec.Swagger) {
 	if swagger.Info == nil {
 		swagger.Info = &spec.Info{
@@ -121,6 +122,47 @@ func (c *Converter) Do() error {
 	}
 	mergeSpecs, err := swagggerbuilder.MergeSpecs(staticSpec, allSpecs...)
 	c.Complete(mergeSpecs)
+	if err != nil {
+		return err
+	}
+	enc := json.NewEncoder(c.Out)
+	defer c.Out.Close()
+	if c.Pretty {
+		enc.SetIndent("", strings.Repeat(" ", c.Indent))
+	}
+
+	err = enc.Encode(mergeSpecs)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// CompleteV3 fill some fields
+func (c *Converter) CompleteV3(swagger *spec3.OpenAPI) {
+	if swagger.Info == nil {
+		swagger.Info = &spec.Info{
+			VendorExtensible: spec.VendorExtensible{Extensions: map[string]interface{}{"buildBy": "convert tool"}},
+			InfoProps:        spec.InfoProps{Description: c.Description, Title: c.Title, Version: c.Version},
+		}
+	}
+}
+
+func (c *Converter) DoV3() error {
+	CRDs := c.analyzeCRD()
+	if len(CRDs) == 0 {
+		return errors.New("no available crd found")
+	}
+	var allSpecs []*spec3.OpenAPI
+	for _, resourceDefinition := range CRDs {
+		specs, err := build.NewOpenApiV3Converter().Convert(resourceDefinition)
+		if err != nil {
+			return err
+		}
+		allSpecs = append(allSpecs, specs...)
+	}
+	mergeSpecs, err := swagggerbuilder.MergeSpecsV3(allSpecs...)
+	c.CompleteV3(mergeSpecs)
 	if err != nil {
 		return err
 	}

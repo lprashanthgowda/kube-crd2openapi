@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/lprashanthgowda/kube-crd2openapi/pkg/cmd/options"
+	"github.com/spf13/cobra"
 )
 
 func NewRootCommand() *cobra.Command {
@@ -40,5 +40,5 @@ func Run(o *options.CRDConvertOptions) error {
 	if err != nil {
 		return err
 	}
-	return cmd.Do()
+	return cmd.DoV3()
 }
